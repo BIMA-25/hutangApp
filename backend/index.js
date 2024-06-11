@@ -20,3 +20,11 @@ app.use(express.json());
 app.use(UserRoute);
 
 app.listen(5001, () => console.log("server berjalann jiaaa"));
+
+// const loginScema = new mongoose.Schema({
+//   username:{type:String,require:true},
+//   password:{type:String,require:true}
+// });
+
+// const collection = mongoose.model("collection", loginScema);
+// module.exports = collection

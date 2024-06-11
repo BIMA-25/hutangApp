@@ -82,21 +82,21 @@ const EditUser = () => {
       }]
     }
 
-    const kembalianSchema = {
-      sisahutang: updatedSisaHutang < 0 ? 0 : updatedSisaHutang,
-      kembalian: updatedSisaHutang < 0 ? Math.abs(updatedSisaHutang) : 0,
-      // sisahutang: updatedSisaHutang < 0 ? 0 : updatedSisaHutang,
-      // kembalian: updatedKembalian,
-      bayar: [...bayarHutangUser, {
-        bayar: nominal,
-        date: date,
-        ket: "dari kurangan kembalian"
-      }]
-    }
+    // const kembalianSchema = {
+    //   sisahutang: updatedSisaHutang < 0 ? 0 : updatedSisaHutang,
+    //   kembalian: updatedSisaHutang < 0 ? Math.abs(updatedSisaHutang) : 0,
+    //   // sisahutang: updatedSisaHutang < 0 ? 0 : updatedSisaHutang,
+    //   // kembalian: updatedKembalian,
+    //   bayar: [...bayarHutangUser, {
+    //     bayar: nominal,
+    //     date: date,
+    //     ket: "dari kurangan kembalian"
+    //   }]
+    // }
     try {
       await axios.patch(`http://localhost:5001/users/${id}`, transaksi === "hutangbaru" ?
         hutangSchema
-        : transaksi === "bayarhutang" ? bayarHutangSchema : kembalianSchema
+        : transaksi === "bayarhutang" ? bayarHutangSchema : hutangSchema
       );
       navigate("/");
     } catch (error) {
