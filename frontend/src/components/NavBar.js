@@ -23,9 +23,6 @@ export default function NavBar() {
             <Nav.Link href="/" className="custom-nav-link">
               Home
             </Nav.Link>
-            <Nav.Link href="cari" className="custom-nav-link">
-              Cari
-            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

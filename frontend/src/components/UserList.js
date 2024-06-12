@@ -8,6 +8,7 @@ const UserList = () => {
   const [users, setUser] = useState([]);
   const [showAdditionalField, setShowAdditionalField] = useState(false);
   const [name, setName] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const saveUser = async (e) => {
     e.preventDefault();
@@ -45,8 +46,12 @@ const UserList = () => {
     setUser(updatedUsers);
   };
 
+  const filteredUsers = users.filter((user) =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <Container fluid className="mt-4">
+    <Container fluid>
       <Row className="my-4">
         <Col md={2}>
           <Button variant="success" onClick={handleButtonClick}>
@@ -76,6 +81,15 @@ const UserList = () => {
             </Form>
           )}
         </Col>
+        <Col md={3}></Col>
+        <Col md={3}>
+          <Form.Control
+            type="text"
+            placeholder="Cari pelanggan"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </Col>
       </Row>
       <Table striped hover className="custom-table">
         <thead>
@@ -83,32 +97,24 @@ const UserList = () => {
             <th className="judul-tabel">No</th>
             <th className="judul-tabel">Nama</th>
             <th className="judul-tabel">nominal</th>
-            
             <th className="judul-tabel">Status</th>
             <th className="judul-tabel action-column">Aksi</th>
           </tr>
         </thead>
-        {users.length !== 0 ? (
+        {filteredUsers.length !== 0 ? (
           <tbody>
-            {users.map((user, index) => (
+            {filteredUsers.map((user, index) => (
               <tr key={user._id}>
                 <td>{index + 1}</td>
                 <td>{user.name}</td>
-                
                 <td>{user.kembalian > 0 ? user.kembalian : user.sisahutang == 0 ? '-' : user.sisahutang}</td>
                 <td>
-                  {user.kembalian > 0 ? 'anda berhutang' : user.sisahutang <= 0 ? 'lunas' : ' pelanggan berhutang'
-                  }
+                  {user.kembalian > 0 ? 'anda berhutang' : user.sisahutang <= 0 ? 'lunas' : 'pelanggan berhutang'}
                 </td>
                 <td className="action-column">
                   <Link to={`edit/${user._id}`} className="mx-1">
                     <Button variant="success" size="sm">
                       Transaksi Baru
-                    </Button>
-                  </Link>
-                  <Link to={`editpel/${user._id}`} className="mx-1">
-                    <Button variant="primary" size="sm">
-                      Edit
                     </Button>
                   </Link>
                   <Link to={`detail/${user._id}`} className="mx-1">

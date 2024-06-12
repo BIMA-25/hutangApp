@@ -33,50 +33,52 @@ export default function DetailUser() {
   useEffect(() => {
     getUserById();
   }, []);
+
   const lunaskanUser = async (id, navigate, sisahutang, kembalian) => {
     const now = new Date();
     const hariIni = now.toISOString();
     const schemaLunasHutang = {
       sisahutang: 0,
-      bayar: [...bayarHutangUser, {
-        bayar: sisahutang,
-        date: hariIni,
-        ket: "dilunaskan",
-      }]
-    }
+      bayar: [
+        ...bayarHutangUser,
+        {
+          bayar: sisahutang,
+          date: hariIni,
+          ket: "dilunaskan",
+        },
+      ],
+    };
     const schemaLunasKembalian = {
       kembalian: 0,
-      hutang: [...hutangUser, {
-        hutang: kembalian,
-        date: hariIni,
-        ket: "dilunaskan",
-      }]
-    }
+      hutang: [
+        ...hutangUser,
+        {
+          hutang: kembalian,
+          date: hariIni,
+          ket: "dilunaskan",
+        },
+      ],
+    };
 
     const update = async (schema) => {
-      if (
-        window.confirm("Apakah anda yakin untuk melunaskan hutang ?")
-      ) {
+      if (window.confirm("Apakah anda yakin untuk melunaskan hutang ?")) {
         try {
           await axios.patch(`http://localhost:5001/users/${id}`, schema);
-          navigate('/'); // Navigate to a temporary route
+          navigate("/"); // Navigate to a temporary route
         } catch (error) {
           console.log(error);
         }
       }
-    }
+    };
 
     if (sisahutang > 0) {
-      update(schemaLunasHutang)
+      update(schemaLunasHutang);
     } else if (kembalian > 0) {
-      update(schemaLunasKembalian)
+      update(schemaLunasKembalian);
     } else {
-      window.confirm("tidak ada hutang atau hutang kembalian")
-    }
-
-
-
-  }
+      window.confirm("tidak ada hutang atau hutang kembalian");
+    }
+  };
 
   const getUserById = async () => {
     const response = await axios.get(`http://localhost:5001/users/${id}`);
@@ -93,7 +95,6 @@ export default function DetailUser() {
   const deleteUser = async (id, navigate) => {
     try {
       await axios.delete(`http://localhost:5001/users/${id}`);
-      //   getUsers();
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -134,27 +135,41 @@ export default function DetailUser() {
               <h5>:</h5>
             </Col>
             <Col xs={7} md={7}>
-              <h5>{kembalian}</h5>
+              <h5>{kembalian < 0 ? 0 : kembalian}</h5>
             </Col>
           </Row>
         </Col>
         <Col xs={12} md={4}>
-        <Row>
+          <Row>
             <Col md={6}></Col>
             <Col md={6}>
-            <Button
+              <Button
                 variant="warning"
                 size="sm"
                 className="mx-1 mb-2"
                 style={{ width: "100%" }}
                 onClick={() => {
                   lunaskanUser(id, navigate, sisahutang, kembalian);
-
                 }}
               >
                 Lunaskan
               </Button>
-
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}></Col>
+            <Col md={6}>
+              <Button
+                variant="success"
+                size="sm"
+                className="mx-1 mb-2"
+                style={{ width: "100%" }}
+                onClick={() => {
+                  navigate(`/editpel/${id}`); // Navigate to the edit page
+                }}
+              >
+                Edit Pelanggan
+              </Button>
             </Col>
           </Row>
           <Row>
@@ -177,11 +192,10 @@ export default function DetailUser() {
               </Button>
             </Col>
           </Row>
-          
         </Col>
       </Row>
       <Row></Row>
-      
+
       <Row className="mt-4">
         <Col>
           <h6 className="text-center">Detail Hutang</h6>
@@ -201,7 +215,7 @@ export default function DetailUser() {
                       ? new Date(item.date)
                       : item.date;
                   return (
-                    <tr>
+                    <tr key={index}>
                       <td>
                         {date instanceof Date && !isNaN(date)
                           ? date.toLocaleDateString("en-GB")
@@ -240,7 +254,7 @@ export default function DetailUser() {
                       ? new Date(item.date)
                       : item.date;
                   return (
-                    <tr>
+                    <tr key={index}>
                       <td>
                         {date instanceof Date && !isNaN(date)
                           ? date.toLocaleDateString("en-GB")
@@ -265,4 +279,4 @@ export default function DetailUser() {
     </>
   );
 }
-//has
+  

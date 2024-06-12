@@ -25,7 +25,7 @@ function UpdatePelanggan() {
     axios
       .patch("http://127.0.0.1:5001/users/" + id, values)
       .then((res) => {
-        navigate("/");
+        navigate("/detail/"+id);
       })
       .catch((err) => console.log(err));
   };
