@@ -50,20 +50,20 @@ const EditUser = () => {
     // Calculate remaining debt based on transaction type
     if (transaksi === "hutangbaru") {
       remainingDebt = transactionAmount;
-      kembalianDebt = -transactionAmount;
     } else if (transaksi === "bayarhutang") {
-      remainingDebt = -transactionAmount;
+      remainingDebt = transactionAmount;
     }
 
     // Update sisahutang in the database
     const updatedSisaHutang = (hutangUser.reduce((acc, curr) => acc + parseFloat(curr.hutang), 0) + remainingDebt) - (bayarHutangUser.reduce((acc, curr) => acc + parseFloat(curr.bayar), 0));
+    const updatedSisaHutangBayar = (hutangUser.reduce((acc, curr) => acc + parseFloat(curr.hutang), 0) ) - (bayarHutangUser.reduce((acc, curr) => acc + parseFloat(curr.bayar), 0)+ remainingDebt);
     const updatedKembalian = (kembalianDebt + kembalian) - updatedSisaHutang;
 
     console.log(updatedSisaHutang);
 
     const hutangSchema = {
-      sisahutang: updatedSisaHutang <= 0 ? 0 : updatedSisaHutang,
-      kembalian: updatedKembalian <0 ? 0 : updatedKembalian,
+      sisahutang: updatedSisaHutang,
+      // kembalian: updatedKembalian <0 ? 0 : updatedKembalian,
       hutang: [...hutangUser, {
         date: date,
         hutang: nominal,
@@ -72,8 +72,8 @@ const EditUser = () => {
     }
 
     const bayarHutangSchema = {
-      sisahutang: updatedSisaHutang <= 0 ?  0 : updatedSisaHutang,
-      kembalian: updatedKembalian,
+      sisahutang: updatedSisaHutangBayar,
+      // kembalian: updatedKembalian,
       bayar: [...bayarHutangUser, {
         bayar: nominal,
         date: date,

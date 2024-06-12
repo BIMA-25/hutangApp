@@ -9,12 +9,23 @@ const UserList = () => {
   const [showAdditionalField, setShowAdditionalField] = useState(false);
   const [name, setName] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const saveUser = async (e) => {
     e.preventDefault();
+
+    // Check if the name already exists
+    const nameExists = users.some(user => user.name.toLowerCase() === name.toLowerCase());
+
+    if (nameExists) {
+      setErrorMessage("Nama sudah ada. Silakan masukkan nama lain.");
+      return;
+    }
+
     try {
       await axios.post("http://localhost:5001/users", { name });
       setShowAdditionalField(false);
+      setErrorMessage(""); // Clear error message if save is successful
       getUsers();
     } catch (error) {
       console.log(error);
@@ -71,6 +82,7 @@ const UserList = () => {
                       placeholder="Name"
                     />
                   </Form.Group>
+                  {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                 </Col>
                 <Col>
                   <Button variant="success" type="submit">
@@ -103,13 +115,13 @@ const UserList = () => {
         </thead>
         {filteredUsers.length !== 0 ? (
           <tbody>
-            {filteredUsers.map((user, index) => (
+            {filteredUsers.reverse().map((user, index) => (
               <tr key={user._id}>
-                <td>{index + 1}</td>
-                <td>{user.name}</td>
-                <td>{user.kembalian > 0 ? user.kembalian : user.sisahutang == 0 ? '-' : user.sisahutang}</td>
-                <td>
-                  {user.kembalian > 0 ? 'anda berhutang' : user.sisahutang <= 0 ? 'lunas' : 'pelanggan berhutang'}
+                <td style={{ color: user.sisahutang < 0 ? 'red' : 'inherit' }}>{index + 1}</td>
+                <td style={{ color: user.sisahutang < 0 ? 'red' : 'inherit' }}>{user.name}</td>
+                <td style={{ color: user.sisahutang < 0 ? 'red' : 'inherit' }}>{Math.abs(user.sisahutang)}</td>
+                <td style={{ color: user.sisahutang < 0 ? 'red' : 'inherit' }}>
+                  {user.sisahutang < 0 ? 'anda berhutang' : user.sisahutang == 0 ? 'lunas' : 'pelanggan berhutang'}
                 </td>
                 <td className="action-column">
                   <Link to={`edit/${user._id}`} className="mx-1">

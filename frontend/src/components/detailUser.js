@@ -42,18 +42,18 @@ export default function DetailUser() {
       bayar: [
         ...bayarHutangUser,
         {
-          bayar: sisahutang,
+          bayar: Math.abs(sisahutang),
           date: hariIni,
           ket: "dilunaskan",
         },
       ],
     };
     const schemaLunasKembalian = {
-      kembalian: 0,
+      sisahutang: 0,
       hutang: [
         ...hutangUser,
         {
-          hutang: kembalian,
+          hutang: Math.abs(sisahutang),
           date: hariIni,
           ket: "dilunaskan",
         },
@@ -73,7 +73,7 @@ export default function DetailUser() {
 
     if (sisahutang > 0) {
       update(schemaLunasHutang);
-    } else if (kembalian > 0) {
+    } else if (sisahutang < 0) {
       update(schemaLunasKembalian);
     } else {
       window.confirm("tidak ada hutang atau hutang kembalian");
@@ -124,7 +124,7 @@ export default function DetailUser() {
               <h5>:</h5>
             </Col>
             <Col xs={7} md={7}>
-              <h5>{sisahutang}</h5>
+              <h5>{sisahutang <= 0 ? 0 : Math.abs(sisahutang)}</h5>
             </Col>
           </Row>
           <Row>
@@ -135,7 +135,7 @@ export default function DetailUser() {
               <h5>:</h5>
             </Col>
             <Col xs={7} md={7}>
-              <h5>{kembalian < 0 ? 0 : kembalian}</h5>
+              <h5>{sisahutang <= 0 ? Math.abs(sisahutang) : 0}</h5>
             </Col>
           </Row>
         </Col>
@@ -149,7 +149,7 @@ export default function DetailUser() {
                 className="mx-1 mb-2"
                 style={{ width: "100%" }}
                 onClick={() => {
-                  lunaskanUser(id, navigate, sisahutang, kembalian);
+                  lunaskanUser(id, navigate, sisahutang, sisahutang);
                 }}
               >
                 Lunaskan
@@ -279,4 +279,3 @@ export default function DetailUser() {
     </>
   );
 }
-  
